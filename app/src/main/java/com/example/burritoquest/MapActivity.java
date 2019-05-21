@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -74,16 +75,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: Found location!");
-                            Location currentLocation = (Location) task.getResult();
 
                             LatLng latLng1 = new LatLng(latitude, longitude);
-                            String information = name + ", " + address;
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng1, DEFAULT_ZOOM));
-                            MarkerOptions options = new MarkerOptions().position(latLng1).title(information);
-                            mMap.addMarker(options);
+                            MarkerOptions options = new MarkerOptions().position(latLng1).title(name).snippet(address);
+                            Marker marker = mMap.addMarker(options);
+                            marker.showInfoWindow();
 
-//                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-//                                    DEFAULT_ZOOM, "My Location ");
                         } else {
                             Log.d(TAG, "onComplete: current location not found");
                             Toast.makeText(MapActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();

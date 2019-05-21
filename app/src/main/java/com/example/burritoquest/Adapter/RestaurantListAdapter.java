@@ -42,8 +42,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         String restaurantName = currentItem.getRestaurantName();
         String restaurantAddress = currentItem.getRestaurantAddress();
-        String priceRating = currentItem.getPriceRating();
-        String userRating = currentItem.getUserRating().toString();
+        String priceRating = "Price: " + currentItem.getDollarSignRating();
+        String userRating = "User Rating: " + currentItem.getUserRating().toString();
 
         holder.mRestaurantName.setText(restaurantName);
         holder.mRestaurantAddress.setText(restaurantAddress);
@@ -55,8 +55,6 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                 Intent intent = new Intent(mContext, MapActivity.class);
                 intent.putExtra("name", currentItem.getRestaurantName());
                 intent.putExtra("address", currentItem.getRestaurantAddress());
-//                intent.putExtra("price", currentItem.getPriceRating());
-//                intent.putExtra("type", "TexMex");
                 intent.putExtra("latitude", currentItem.getLocation().getLat());
                 intent.putExtra("longitude", currentItem.getLocation().getLng());
                 mContext.startActivity(intent);

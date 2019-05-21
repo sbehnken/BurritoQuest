@@ -10,13 +10,12 @@ public class RestaurantItem {
     private Double mUserRating;
     private Location mLocation;
 
-    public RestaurantItem(String restaurantName, String restaurantAddress, String priceRating, Double userRating, Location location) {
+    RestaurantItem(String restaurantName, String restaurantAddress, String priceRating, Double userRating, Location location) {
         mRestaurantName = restaurantName;
         mRestaurantAddress = restaurantAddress;
         mPriceRating = priceRating;
         mUserRating = userRating;
         mLocation = location;
-
     }
 
     public String getRestaurantName() {
