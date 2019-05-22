@@ -90,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 });
             }
         } catch (SecurityException e) {
-            Log.e(TAG, "get Device Location: Security exception:" + e.getMessage());
+            Log.e(TAG, "getDeviceLocation: Security exception:" + e.getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+        builder.setMessage("This application requires GPS to work properly. Do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {

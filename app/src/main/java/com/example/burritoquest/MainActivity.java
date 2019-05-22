@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     (currentLocation.getLongitude()));
                         } else {
                             Log.d("TAG", "onComplete: current location not found");
-                            Toast.makeText(MainActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Unable to find current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

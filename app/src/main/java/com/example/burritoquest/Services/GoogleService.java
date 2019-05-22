@@ -26,7 +26,8 @@ public class GoogleService {
     }
 
     public Call<GoogleResult> googleResultCall(String location) {
-        return googleInterface.googleResultCall(2000, "restaurant", "burrito", BuildConfig.ApiKey, "location");
+        return googleInterface.googleResultCall(2000, "restaurant", "burrito", BuildConfig.ApiKey, location);
+
     }
 }
 
