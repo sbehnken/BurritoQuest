@@ -19,6 +19,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxEms="10"
             android:text="Restaurant Name"
             android:textColor="#673AB7"
             android:textSize="28sp"
@@ -33,6 +36,9 @@
             android:layout_alignParentLeft="true"
             android:layout_marginTop="26dp"
             android:paddingTop="18dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxEms="13"
             android:text="123 Burrito Ave"
             android:textSize="18sp"
             android:textStyle="bold">
@@ -83,7 +89,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:background="#FFFFFF"
             android:src="@mipmap/arrow_forward">
         </ImageButton>
