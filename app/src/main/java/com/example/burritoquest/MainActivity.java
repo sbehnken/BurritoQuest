@@ -19,6 +19,7 @@ import com.example.burritoquest.Model.Result;
 import com.example.burritoquest.Services.GoogleService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -31,6 +32,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private RestaurantListAdapter mAdapter;
+
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 });
         } catch (SecurityException e) {
-            Log.e( "TAG","get Device Location: Security exception:" + e.getMessage());
+            Log.e( "TAG","getDeviceLocation: Security exception:" + e.getMessage());
         }
     }
 
@@ -94,13 +96,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void getRestaurants(String location) {
         final GoogleService googleService = new GoogleService();
-        googleService.googleResultCall().enqueue(new Callback<GoogleResult>() {
+        googleService.googleResultCall(location).enqueue(new Callback<GoogleResult>() {
             @Override
             public void onResponse(Call<GoogleResult> call, Response<GoogleResult> response) {
                 List<RestaurantItem> restaurantList = new ArrayList<>();
                 List<Result> results = response.body().getResults();
                 for(int i = 0; i < results.size(); i++) {
-
                     String priceLevel = (results.get(i).getPriceLevel() != null) ? Integer.toString(results.get(i).getPriceLevel()) : "N/A";
                     RestaurantItem restaurantItem = new RestaurantItem(results.get(i).getName(), results.get(i).getVicinity(),
                             priceLevel, results.get(i).getRating(), results.get(i).getGeometry().getLocation());
@@ -109,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
                 mAdapter.setRestaurantList(restaurantList);
                 mAdapter.notifyDataSetChanged();
-                Log.d("TAG", "Yay working!");
+                Log.d("TAG", "onGetRestaurants: Yay working!");
             }
 
             @Override
             public void onFailure(Call<GoogleResult> call, Throwable t) {
-                Log.d("TAG", "No worky yet");
+                Log.d("TAG", "onGetRestaurants: Not working yet");
             }
         });
     }

@@ -3,6 +3,8 @@ package com.example.burritoquest.Services;
 
 import com.example.burritoquest.BuildConfig;
 import com.example.burritoquest.Model.GoogleResult;
+import com.example.burritoquest.Model.Location;
+import com.google.android.gms.maps.model.Marker;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -23,8 +25,8 @@ public class GoogleService {
 
     }
 
-    public Call<GoogleResult> googleResultCall() {
-        return googleInterface.googleResultCall(2000, "restaurant", "burrito", BuildConfig.ApiKey, "40.729180,-73.984930");
+    public Call<GoogleResult> googleResultCall(String location) {
+        return googleInterface.googleResultCall(2000, "restaurant", "burrito", BuildConfig.ApiKey, "location");
     }
 }
 

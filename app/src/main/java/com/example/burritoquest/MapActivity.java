@@ -123,7 +123,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         alert.show();
     }
 
-    public void isMapsEnabled() { //enables gps on the device
+    public void isMapsEnabled() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -148,7 +148,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void getLocationPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION}; //, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
