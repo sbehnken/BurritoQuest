@@ -67,7 +67,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         return mRestaurantList.size();
     }
 
-    class RestaurantViewHolder extends RecyclerView.ViewHolder {
+    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView mRestaurantName;
         TextView mRestaurantAddress;
         TextView mPriceRating;
@@ -82,6 +82,20 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             mPriceRating = itemView.findViewById(R.id.price_rating);
             mUserRating = itemView.findViewById(R.id.user_rating);
             mForwardArrow = itemView.findViewById(R.id.arrow_forward);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int itemPosition = getLayoutPosition();
+            final RestaurantItem currentItem = mRestaurantList.get(itemPosition);
+
+            Intent intent = new Intent(mContext, MapActivity.class);
+            intent.putExtra("name", currentItem.getRestaurantName());
+            intent.putExtra("address", currentItem.getRestaurantAddress());
+            intent.putExtra("latitude", currentItem.getLocation().getLat());
+            intent.putExtra("longitude", currentItem.getLocation().getLng());
+            mContext.startActivity(intent);
         }
     }
 }
