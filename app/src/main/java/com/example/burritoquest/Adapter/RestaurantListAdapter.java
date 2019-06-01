@@ -57,6 +57,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                 intent.putExtra("address", currentItem.getRestaurantAddress());
                 intent.putExtra("latitude", currentItem.getLocation().getLat());
                 intent.putExtra("longitude", currentItem.getLocation().getLng());
+                intent.putExtra("price_level", currentItem.getDollarSignRating());
+                intent.putExtra("rating", currentItem.getUserRating().toString());
                 mContext.startActivity(intent);
             }
         });
@@ -95,6 +97,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             intent.putExtra("address", currentItem.getRestaurantAddress());
             intent.putExtra("latitude", currentItem.getLocation().getLat());
             intent.putExtra("longitude", currentItem.getLocation().getLng());
+            intent.putExtra("price_level", currentItem.getDollarSignRating());
+            intent.putExtra("rating", currentItem.getUserRating().toString());
             mContext.startActivity(intent);
         }
     }

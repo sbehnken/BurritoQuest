@@ -19,7 +19,6 @@ import com.example.burritoquest.Model.Result;
 import com.example.burritoquest.Services.GoogleService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -36,17 +35,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
+    LinearLayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
-
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new RestaurantListAdapter(this, new ArrayList<RestaurantItem>());
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         getLocationPermission();
@@ -99,19 +99,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         googleService.googleResultCall(location).enqueue(new Callback<GoogleResult>() {
             @Override
             public void onResponse(Call<GoogleResult> call, Response<GoogleResult> response) {
-                List<RestaurantItem> restaurantList = new ArrayList<>();
-                List<Result> results = response.body().getResults();
-                for(int i = 0; i < results.size(); i++) {
-                    String priceLevel = (results.get(i).getPriceLevel() != null) ? Integer.toString(results.get(i).getPriceLevel()) : "N/A";
-                    RestaurantItem restaurantItem = new RestaurantItem(results.get(i).getName(), results.get(i).getVicinity(),
-                            priceLevel, results.get(i).getRating(), results.get(i).getGeometry().getLocation());
 
-                    restaurantList.add(restaurantItem);
-                }
-                mAdapter.setRestaurantList(restaurantList);
-                mAdapter.notifyDataSetChanged();
-                Log.d("TAG", "onGetRestaurants: Yay working!");
-            }
+                        List<RestaurantItem> restaurantList = new ArrayList<>();
+                        List<Result> results = response.body().getResults();
+                        for (int i = 0; i < results.size(); i++) {
+                            String priceLevel = (results.get(i).getPriceLevel() != null) ? Integer.toString(results.get(i).getPriceLevel()) : "N/A";
+                            RestaurantItem restaurantItem = new RestaurantItem(results.get(i).getName(), results.get(i).getVicinity(),
+                                    priceLevel, results.get(i).getRating(), results.get(i).getGeometry().getLocation());
+
+                            restaurantList.add(restaurantItem);
+                        }
+                        mAdapter.setRestaurantList(restaurantList);
+                        mAdapter.notifyDataSetChanged();
+                        Log.d("TAG", "onGetRestaurants: Yay working!");
+                    }
 
             @Override
             public void onFailure(Call<GoogleResult> call, Throwable t) {

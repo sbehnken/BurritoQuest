@@ -23,6 +23,10 @@ public class RestaurantItem {
     }
 
     public String getRestaurantAddress() {
+        int comma = mRestaurantAddress.indexOf(',');
+        if(mRestaurantAddress.contains(",")) {
+            mRestaurantAddress = mRestaurantAddress.substring(0, comma);
+        }
         return mRestaurantAddress;
     }
 
