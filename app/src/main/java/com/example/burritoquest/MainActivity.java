@@ -1,6 +1,7 @@
 package com.example.burritoquest;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -15,15 +16,11 @@ import android.widget.Toast;
 
 import com.example.burritoquest.Adapter.RestaurantListAdapter;
 import com.example.burritoquest.Model.GoogleResult;
-import com.example.burritoquest.Model.Result;
 import com.example.burritoquest.Services.GoogleService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,19 +34,79 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     LinearLayoutManager mLayoutManager;
 
+    private String nextPageToken = null;
+    private boolean noMoreResults = false;
+
+    private String latlong = "";
+
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Wait while loading...");
+
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new RestaurantListAdapter(this, new ArrayList<RestaurantItem>());
+        mAdapter = new RestaurantListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                if(!noMoreResults) {
+                    getRestaurants(latlong);
+                }
+            }
+        });
+
         getLocationPermission();
+    }
+
+    public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
+        private int previousTotal = 0; // The total number of items in the dataset after the last load
+        private boolean loading = true; // True if we are still waiting for the last set of data to load.
+        private int visibleThreshold = 5; // The minimum amount of items to have below your current scroll position before loading more.
+        int firstVisibleItem, visibleItemCount, totalItemCount;
+
+        private int current_page = 1;
+
+        private LinearLayoutManager mLinearLayoutManager;
+
+        EndlessRecyclerOnScrollListener(LinearLayoutManager linearLayoutManager) {
+            this.mLinearLayoutManager = linearLayoutManager;
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            visibleItemCount = recyclerView.getChildCount();
+            totalItemCount = mLinearLayoutManager.getItemCount();
+            firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+            if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                    progressDialog.show();
+                }
+            }
+            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                current_page++;
+                onLoadMore(current_page);
+                loading = true;
+
+            }
+            progressDialog.dismiss();
+        }
+        public abstract void onLoadMore(int current_page);
     }
 
     private void getDeviceLocation() {
@@ -63,8 +120,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             Log.d("TAG", "onComplete: Found location!");
                             android.location.Location currentLocation = (Location) task.getResult();
 
-                            getRestaurants((currentLocation.getLatitude())  + "," +
-                                    (currentLocation.getLongitude()));
+                            latlong = currentLocation.getLatitude()  + "," + currentLocation.getLongitude();
+                            getRestaurants(latlong);
+
                         } else {
                             Log.d("TAG", "onComplete: current location not found");
                             Toast.makeText(MainActivity.this, "Unable to find current location", Toast.LENGTH_SHORT).show();
@@ -94,25 +152,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void getRestaurants(String location) {
+    private void getRestaurants(final String location) {
         final GoogleService googleService = new GoogleService();
-        googleService.googleResultCall(location).enqueue(new Callback<GoogleResult>() {
+        //display loading notifcation loading bar
+        googleService.googleResultCall(location, nextPageToken).enqueue(new Callback<GoogleResult>() {
             @Override
             public void onResponse(Call<GoogleResult> call, Response<GoogleResult> response) {
 
-                        List<RestaurantItem> restaurantList = new ArrayList<>();
-                        List<Result> results = response.body().getResults();
-                        for (int i = 0; i < results.size(); i++) {
-                            String priceLevel = (results.get(i).getPriceLevel() != null) ? Integer.toString(results.get(i).getPriceLevel()) : "N/A";
-                            RestaurantItem restaurantItem = new RestaurantItem(results.get(i).getName(), results.get(i).getVicinity(),
-                                    priceLevel, results.get(i).getRating(), results.get(i).getGeometry().getLocation());
-
-                            restaurantList.add(restaurantItem);
-                        }
-                        mAdapter.setRestaurantList(restaurantList);
-                        mAdapter.notifyDataSetChanged();
-                        Log.d("TAG", "onGetRestaurants: Yay working!");
+                    nextPageToken = response.body().getNextPageToken();
+                    if(nextPageToken == null) {
+                        noMoreResults = true;
                     }
+
+                    mAdapter.setRestaurantList(response.body().getResults());
+                    mAdapter.notifyDataSetChanged();
+                    //hide loading notification bar
+
+                    Log.d("TAG", "onGetRestaurants: Yay working!");
+            }
 
             @Override
             public void onFailure(Call<GoogleResult> call, Throwable t) {

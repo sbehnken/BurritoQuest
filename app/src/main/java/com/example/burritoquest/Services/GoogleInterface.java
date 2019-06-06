@@ -8,10 +8,8 @@ import retrofit2.http.Query;
 
 public interface GoogleInterface {
     @GET("maps/api/place/nearbysearch/json")
-    Call<GoogleResult> googleResultCall(@Query("pageToken") String pageToken, @Query("radius") Integer radius, @Query("type") String type, @Query("keyword") String keyword,
-                                        @Query("key") String apiKey, @Query("location") String location);
+    Call<GoogleResult> firstGoogleResultCall(@Query("radius") Integer radius, @Query("type") String type, @Query("keyword") String keyword,
+                                             @Query("key") String apiKey, @Query("location") String location, @Query("pagetoken") String pageToken);
 
-    @GET("maps/api/place/nearbysearch/json")
-    Call<GoogleResult> secondResultCall(@Query("pageToken") String pageToken, @Query("key") String apiKey);
 
 }

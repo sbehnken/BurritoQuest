@@ -10,7 +10,7 @@ public class RestaurantItem {
     private Double mUserRating;
     private Location mLocation;
 
-    RestaurantItem(String restaurantName, String restaurantAddress, String priceRating, Double userRating, Location location) {
+    public RestaurantItem(String restaurantName, String restaurantAddress, String priceRating, Double userRating, Location location) {
         mRestaurantName = restaurantName;
         mRestaurantAddress = restaurantAddress;
         mPriceRating = priceRating;

@@ -38,13 +38,11 @@ import static com.example.burritoquest.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String TAG = "MapActivity";
 
     private boolean mLocationPermissionGranted = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 14f;
 
-    TextView mResNameMap;
     TextView mResAddressMap;
     TextView mResPriceRateMap;
     TextView mResUserRateMap;
@@ -53,8 +51,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Double longitude;
     private String name;
     private String address;
-
-    private GoogleMap mMap;
 
     Toolbar mapToolbar;
 
@@ -71,11 +67,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         String priceRate = intent.getStringExtra("price_level");
         String userRate = intent.getStringExtra("rating");
 
-         mapToolbar = findViewById(R.id.toolbar_mapactivity);
+        mapToolbar = findViewById(R.id.toolbar_mapactivity);
         setSupportActionBar(mapToolbar);
 
-        Drawable backArrow = this.getResources().getDrawable(R.drawable.arrow_back);
-        getSupportActionBar().setHomeAsUpIndicator(backArrow);
         mapToolbar.setNavigationIcon(R.mipmap.arrow_back);
         mapToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,48 +95,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationPermission();
     }
 
-    private void getDeviceLocation() {
-        FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            if (mLocationPermissionGranted) {
-                Task<Location> location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            Log.d(TAG, "onComplete: Found location!");
-
-                            LatLng latLng1 = new LatLng(latitude, longitude);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng1, DEFAULT_ZOOM));
-                            MarkerOptions options = new MarkerOptions().position(latLng1).title(name).snippet(address)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarkercustom));
-                            Marker marker = mMap.addMarker(options);
-
-                        } else {
-                            Log.d(TAG, "onComplete: current location not found");
-                            Toast.makeText(MapActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: Security exception:" + e.getMessage());
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        GoogleMap mMap = googleMap;
 
         if (mLocationPermissionGranted) {
-            getDeviceLocation();
+            LatLng latLng1 = new LatLng(latitude, longitude);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng1, DEFAULT_ZOOM));
+            MarkerOptions options = new MarkerOptions().position(latLng1).title(name).snippet(address)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarkercustom));
+             mMap.addMarker(options);
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
     }
 
     private void buildAlertMessageNoGps() {

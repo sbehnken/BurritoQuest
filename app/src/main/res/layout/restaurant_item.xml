@@ -88,7 +88,7 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/arrow_forward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             android:layout_alignParentBottom="true"
             android:background="#FFFFFF"
             android:src="@mipmap/arrow_forward">
-        </ImageButton>
+        </ImageView>
 
     </RelativeLayout>
 

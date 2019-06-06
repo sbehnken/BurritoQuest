@@ -7,6 +7,7 @@
     tools:context="com.example.burritoquest.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_mainactivity"
@@ -17,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_marginTop="8dp"
-        android:background="#FFFFFF" />
+        android:background="#FFFFFF"
+        android:paddingBottom="?attr/actionBarSize"
+        />
 
         </android.support.constraint.ConstraintLayout>

@@ -8,25 +8,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.burritoquest.MapActivity;
+import com.example.burritoquest.Model.Result;
 import com.example.burritoquest.R;
 import com.example.burritoquest.RestaurantItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder> {
     private Context mContext;
-    private List<RestaurantItem> mRestaurantList;
+    private List<RestaurantItem> mRestaurantList = new ArrayList<>();
 
-    public RestaurantListAdapter(Context context, List<RestaurantItem> restaurantList) {
+    public RestaurantListAdapter(Context context) {
         mContext = context;
-        mRestaurantList = restaurantList;
     }
 
-    public void setRestaurantList(List<RestaurantItem> mRestaurantList) {
-        this.mRestaurantList = mRestaurantList;
+    public void setRestaurantList(List<Result> results) {
+        for (int i = 0; i < results.size(); i++) {
+            String priceLevel = (results.get(i).getPriceLevel() != null) ? Integer.toString(results.get(i).getPriceLevel()) : "N/A";
+            RestaurantItem restaurantItem = new RestaurantItem(results.get(i).getName(), results.get(i).getVicinity(),
+                    priceLevel, results.get(i).getRating(), results.get(i).getGeometry().getLocation());
+
+            mRestaurantList.add(restaurantItem);
+        }
     }
 
     @NonNull
@@ -49,19 +57,6 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         holder.mRestaurantAddress.setText(restaurantAddress);
         holder.mPriceRating.setText(priceRating);
         holder.mUserRating.setText(userRating);
-        holder.mForwardArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MapActivity.class);
-                intent.putExtra("name", currentItem.getRestaurantName());
-                intent.putExtra("address", currentItem.getRestaurantAddress());
-                intent.putExtra("latitude", currentItem.getLocation().getLat());
-                intent.putExtra("longitude", currentItem.getLocation().getLng());
-                intent.putExtra("price_level", currentItem.getDollarSignRating());
-                intent.putExtra("rating", currentItem.getUserRating().toString());
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -69,12 +64,12 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         return mRestaurantList.size();
     }
 
-    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mRestaurantName;
         TextView mRestaurantAddress;
         TextView mPriceRating;
         TextView mUserRating;
-        ImageButton mForwardArrow;
+        ImageView mForwardArrow;
 
         RestaurantViewHolder(View itemView) {
             super(itemView);
