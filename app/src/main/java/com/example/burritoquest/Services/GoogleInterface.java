@@ -11,5 +11,4 @@ public interface GoogleInterface {
     Call<GoogleResult> firstGoogleResultCall(@Query("radius") Integer radius, @Query("type") String type, @Query("keyword") String keyword,
                                              @Query("key") String apiKey, @Query("location") String location, @Query("pagetoken") String pageToken);
 
-
 }
