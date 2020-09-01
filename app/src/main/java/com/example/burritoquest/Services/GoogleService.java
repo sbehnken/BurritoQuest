@@ -24,8 +24,8 @@ public class GoogleService {
     }
 
     public Call<GoogleResult> googleResultCall(String location, String pageToken) {
-        return googleInterface.firstGoogleResultCall( 2000, "restaurant", "burrito", BuildConfig.ApiKey, location, pageToken);
+        return googleInterface.firstGoogleResultCall(5000, "restaurant", "burrito", BuildConfig.ApiKey, location, pageToken);
     }
-    }
+}
 
 

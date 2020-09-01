@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,23 +16,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import static com.example.burritoquest.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
@@ -156,4 +149,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
+    //Changing price rating to dollar sign
+//    public String getDollarSignRating() {
+//        if (mPriceRating.equals("1")) {
+//            return "$";
+//        }
+//        if (mPriceRating.equals("2")) {
+//            return "$$";
+//        }
+//        if (mPriceRating.equals("3")) {
+//            return "$$$";
+//        }
+//        if (mPriceRating.equals("4")) {
+//            return "$$$$";
+//        } else {
+//            return "N/A";
+//        }
+//    }
 }
