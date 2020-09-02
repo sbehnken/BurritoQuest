@@ -10,12 +10,3 @@ You can get directions to your chosen burrito place by clicking on the marker wh
 
 The GPS button in the top right corner brings the camera view back to your current location. 
 
-# Known issues/To Do's:
-
-Restaurant type was exchanged for restaurant rating
-
-Get pagination working
-
-Spiffy up look and feel of UI
-
-
